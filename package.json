@@ -28,5 +28,9 @@
   "workspaces": [
     "viewer",
     "example"
-  ]
+  ],
+  "dependencies": {
+    "web-ifc": "^0.0.30",
+    "yarn": "^1.22.17"
+  }
 }
