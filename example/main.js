@@ -170,3 +170,9 @@ dropBoxButton.addEventListener('click', () => {
   viewer.openDropboxWindow();
 });
 
+const alignmentButton = createSideMenuButton('./resources/alignment.svg');
+alignmentButton.addEventListener('click', () => {
+  alignmentButton.blur();
+  //viewer.openDropboxWindow();
+});
+
