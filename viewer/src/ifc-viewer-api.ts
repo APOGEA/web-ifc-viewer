@@ -8,7 +8,8 @@ import {
   IfcClipper,
   DropboxAPI,
   IfcStats,
-  IfcEdges
+  IfcEdges,
+  IfcAlignment
 } from './components';
 import { IfcDimensions } from './components/display/dimensions/dimensions';
 import { GLTFManager } from './components/import-export/glTF';
@@ -19,6 +20,7 @@ export class IfcViewerAPI {
   clipper: IfcClipper;
   dimensions: IfcDimensions;
   edges: IfcEdges;
+  alignment: IfcAlignment;
   gltf: GLTFManager;
   stats?: IfcStats;
   grid?: IfcGrid;
@@ -32,6 +34,7 @@ export class IfcViewerAPI {
     this.clipper = new IfcClipper(this.context);
     this.dimensions = new IfcDimensions(this.context);
     this.edges = new IfcEdges(this.context);
+    this.alignment = new IfcAlignment(this.context);
     this.gltf = new GLTFManager(this.context);
   }
 
@@ -74,6 +77,13 @@ export class IfcViewerAPI {
    */
   addClippingPlane = () => {
     this.clipper.createPlane();
+  };
+
+  /**
+   * Adds a clipping plane on the face pointed to by the cursor.
+   */
+  addAlignment = () => {
+    this.alignment.toggleAlignment(true);
   };
 
   /**

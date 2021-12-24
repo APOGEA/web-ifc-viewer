@@ -45477,6 +45477,53 @@
         }
     }
 
+    class IfcAlignment$1 extends IfcComponent {
+        constructor(context) {
+            super(context);
+            this.lineMaterial = new LineBasicMaterial({
+                color: 0x888888
+            });
+            this.toggleAlignment = (active) => {
+                this.context.items.ifcModels.forEach((ifcModel) => {
+                    if (!active && ifcModel.userData.alignment) {
+                        ifcModel.remove(ifcModel.userData.alignment);
+                        return;
+                    }
+                    if (!ifcModel.userData.alignment)
+                        ifcModel.userData.alignment = this.constructEdges();
+                    ifcModel.add(ifcModel.userData.alignment);
+                });
+            };
+            this.constructEdges = () => {
+                const points = [];
+                const indices = [];
+                points.push(new Vector2(0, 0));
+                points.push(new Vector2(0, 10));
+                points.push(new Vector2(20, 10));
+                points.push(new Vector2(20, 0));
+                for (let i = 1; i < 20; i++) {
+                    points.push(new Vector2(i, 0));
+                    points.push(new Vector2(i, 10));
+                }
+                indices.push(0, 1);
+                indices.push(1, 2);
+                indices.push(2, 3);
+                indices.push(3, 0);
+                for (let i = 1; i < 20; i++) {
+                    let id = (i - 1) * 2;
+                    indices.push(4 + id, 4 + id + 1);
+                }
+                const geometry = new BufferGeometry().setFromPoints(points);
+                geometry.setIndex(indices);
+                return new LineSegments(geometry, this.lineMaterial);
+            };
+            this.context = context;
+        }
+        set edgesMaterial(newMaterial) {
+            this.lineMaterial = newMaterial;
+        }
+    }
+
     class IfcGrid$1 extends IfcComponent {
         constructor(context, size, divisions, colorCenterLine, colorGrid) {
             super(context);
@@ -105861,6 +105908,12 @@
                 this.clipper.createPlane();
             };
             /**
+             * Adds a clipping plane on the face pointed to by the cursor.
+             */
+            this.addAlignment = () => {
+                this.alignment.toggleAlignment(true);
+            };
+            /**
              * Removes the clipping plane pointed by the cursor.
              */
             this.removeClippingPlane = () => {
@@ -105902,6 +105955,7 @@
             this.clipper = new IfcClipper(this.context);
             this.dimensions = new IfcDimensions(this.context);
             this.edges = new IfcEdges(this.context);
+            this.alignment = new IfcAlignment$1(this.context);
             this.gltf = new GLTFManager(this.context);
         }
         /**
@@ -111094,7 +111148,7 @@
     const alignmentButton = createSideMenuButton('./resources/alignment.svg');
     alignmentButton.addEventListener('click', () => {
       alignmentButton.blur();
-      //viewer.openDropboxWindow();
+      viewer.addAlignment();
     });
 
 })();
